@@ -1,0 +1,32 @@
+# codic vim plugin
+
+A plugin of http://codic.jp/ for Vim.
+
+## Usage
+
+To search a word of under ther cursor.
+
+```
+:Codic
+```
+
+Or give a word as arguments.
+
+```
+:Codic ベクター
+```
+
+## Dictionaries.
+
+For latest dictionaries, download archive files from
+http://codic.jp/assets/archives/
+
+*   codic-english-dict-{YYYYMMDD}.zip
+*   codic-naming-dict-{YYYYMMDD}.zip
+
+then extract *.csv files and overwrite in dict/ folder.
+
+## License
+
+Source codes are distributed under Vim License.
+Dictionaries are redistributed under Creative Commons License (CC BY-SA 3.0).
