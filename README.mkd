@@ -10,7 +10,7 @@ To search a word of under ther cursor.
 :Codic
 ```
 
-Or give a word as arguments.
+Or give a word as an argument.
 
 ```
 :Codic ベクター
@@ -19,7 +19,7 @@ Or give a word as arguments.
 To close codic result window, just type `<C-W><C-Z>` or `<C-W>z`.  It is a just
 preview window.
 
-## Dictionaries.
+## Dictionaries
 
 For latest dictionaries, download archive files from
 http://codic.jp/assets/archives/
