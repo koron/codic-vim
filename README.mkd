@@ -16,6 +16,9 @@ Or give a word as arguments.
 :Codic ベクター
 ```
 
+To close codic result window, just type `<C-W><C-Z>` or `<C-W>z`.  It is a just
+preview window.
+
 ## Dictionaries.
 
 For latest dictionaries, download archive files from
@@ -25,6 +28,8 @@ http://codic.jp/assets/archives/
 *   codic-naming-dict-{YYYYMMDD}.zip
 
 then extract *.csv files and overwrite in dict/ folder.
+
+Currently, dict/ folder includes dictionaries 20131229 version.
 
 ## License
 
