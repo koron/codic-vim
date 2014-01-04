@@ -24,7 +24,10 @@ function! codic#clear()
   endif
 endfunction
 
-function! codic#search(word)
+" search from codic.
+"   word  - keyword to search
+"   limit - limit number of candidates (0:unlimitted)
+function! codic#search(word, limit)
   if len(a:word) == 0
     return -1
   endif
@@ -32,7 +35,7 @@ function! codic#search(word)
   if len(dict) == 0
     return -2
   end
-  let items = s:Find(dict, a:word)
+  let items = s:Find(dict, a:word, a:limit)
   if len(items) == 0
     return -3
   end
@@ -46,7 +49,7 @@ function! s:EchoError(msg)
 endfunction
 
 function! s:Search(word)
-  let r = codic#search(a:word)
+  let r = codic#search(a:word, 10)
   if type(r) == 0
     if r == -1
       call s:EchoError('Codic: empty word')
@@ -164,7 +167,7 @@ function! s:GetDictAuto(word)
   endif
 endfunction
 
-function! s:Find(dict, word)
+function! s:Find(dict, word, limit)
   let items = []
   for [ k, v ] in items(a:dict)
     let score = stridx(k, a:word)
@@ -173,7 +176,7 @@ function! s:Find(dict, word)
     end
   endfor
   call sort(items, 's:Compare')
-  return map(items[0:9], 'v:val["item"]')
+  return map(items[0:(a:limit - 1)], 'v:val["item"]')
 endfunction
 
 function! s:Compare(i1, i2)
