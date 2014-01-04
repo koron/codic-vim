@@ -150,11 +150,23 @@ function! s:GetDict(word)
 endfunction
 
 function! s:Find(dict, word)
-  let item = get(a:dict, a:word, {})
-  if len(item) == 0
-    return []
+  let items = []
+  for [ k, v ] in items(a:dict)
+    let score = stridx(k, a:word)
+    if score >= 0
+      call add(items, { 'score': score, 'key': k, 'item': v })
+    end
+  endfor
+  call sort(items, 's:Compare')
+  return map(items[0:9], 'v:val["item"]')
+endfunction
+
+function! s:Compare(i1, i2)
+  let cmp = a:i1['score'] - a:i2['score']
+  if cmp != 0
+    return cmp
   endif
-  return [item]
+  return len(a:i1['key']) - len(a:i2['key'])
 endfunction
 
 function! s:Show(items, word)
@@ -177,8 +189,8 @@ function! s:Show(items, word)
   endfor
   " Output to result buffer.
   silent! wincmd P
-  call append(0, lines)
-  silent! execute '$delete'
+  call append(line('$'), lines)
+  silent! execute '1delete'
   silent! wincmd p
   return bnum
 endfunction
