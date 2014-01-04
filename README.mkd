@@ -19,6 +19,11 @@ Or give a word as an argument.
 To close codic result window, just type `<C-W><C-Z>` or `<C-W>z`.  It is a just
 preview window.
 
+### Unite Source
+
+If you want to use codic-vim as Unite source, please refer
+[unite-codic.vim](https://github.com/rhysd/unite-codic.vim) project.
+
 ## Dictionaries
 
 For latest dictionaries, download archive files from
@@ -27,9 +32,14 @@ http://codic.jp/assets/archives/
 *   codic-english-dict-{YYYYMMDD}.zip
 *   codic-naming-dict-{YYYYMMDD}.zip
 
-then extract *.csv files and overwrite in dict/ folder.
+then extract \*.csv files and overwrite in dict/ folder.
 
 Currently, dict/ folder includes dictionaries 20131229 version.
+
+## Special Thanks
+
+*   [Linda\_pp](http://rhysd.hatenablog.com/entry/2014/01/04/152927)
+*   [osyo-manga](http://d.hatena.ne.jp/osyo-manga/20140104/1388844035)
 
 ## License
 
