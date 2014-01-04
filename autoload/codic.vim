@@ -9,9 +9,9 @@ set cpo-=C
 
 function! codic#command(...)
   if a:0 == 0
-    call codic#search(expand('<cword>'))
+    call s:Search(expand('<cword>'))
   else
-    call codic#search(a:1)
+    call s:Search(a:1)
   end
 endfunction
 
@@ -26,32 +26,47 @@ endfunction
 
 function! codic#search(word)
   if len(a:word) == 0
-    echohl ErrorMsg
-    echomsg 'Codic: empty word'
-    echohl None
     return -1
   endif
   let dict = s:GetDictAuto(a:word)
   if len(dict) == 0
-    echohl ErrorMsg
-    echomsg 'Codic: dictionaries not found'
-    echohl None
     return -2
   end
   let items = s:Find(dict, a:word)
   if len(items) == 0
-    echohl ErrorMsg
-    echomsg printf('Codic: cannot find for "%s"', a:word)
-    echohl None
     return -3
   end
-  let bnum = s:Show(items, a:word)
+  return items
+endfunction
+
+function! s:EchoError(msg)
+  echohl ErrorMsg
+  echomsg a:msg
+  echohl None
+endfunction
+
+function! s:Search(word)
+  let r = codic#search(a:word)
+  if type(r) == 0
+    if r == -1
+      call s:EchoError('Codic: empty word')
+    elseif r == -2
+      call s:EchoError('Codic: dictionaries not found')
+    elseif r == -3
+      call s:EchoError(printf('Codic: cannot find for "%s"', a:word))
+    else
+      call s:EchoError(printf('Codic: unknown error %d', r))
+    endif
+    return r
+  endif
+  let bnum = s:Show(r, a:word)
   if bnum < 0
     echohl ErrorMsg
     echomsg 'Codic: failed to open buffer'
     echohl None
     return -4
   endif
+  return 0
 endfunction
 
 function! s:ToMap(array)
