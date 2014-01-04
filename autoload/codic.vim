@@ -197,7 +197,7 @@ endfunction
 
 function! s:OpenScratch(name)
   let bnum = bufnr(a:name)
-  silent! execute 'pedit ' . a:name
+  silent! execute 'pedit ' . escape(a:name, ' \')
   if bnum < 0
     silent! wincmd P
     setlocal buftype=nofile noswapfile
