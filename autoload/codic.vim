@@ -70,6 +70,9 @@ function! s:LoadCSV(fname)
   let csv = []
   let line = ''
   for curr in readfile(a:fname, 'b')
+    if &enc !=# 'utf-8'
+      let curr = iconv(curr, 'utf-8', &enc)
+    endif
     let line .= curr
     if curr =~# '\r$'
       continue
