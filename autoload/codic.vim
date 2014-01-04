@@ -111,6 +111,7 @@ function! s:LoadDict(dir, name, mapfn)
     let label = cols[1]
     let dict[label] = { 'id': id, 'label': label, 'values': mapped_values }
   endfor
+  redraw!
   return dict
 endfunction
 
