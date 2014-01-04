@@ -31,7 +31,7 @@ function! codic#search(word)
     echohl None
     return -1
   endif
-  let dict = s:GetDict(a:word)
+  let dict = s:GetDictAuto(a:word)
   if len(dict) == 0
     echohl ErrorMsg
     echomsg 'Codic: dictionaries not found'
@@ -132,7 +132,7 @@ function! s:Map_english(entry, trans)
         \ }
 endfunction
 
-function! s:GetDict2(lang)
+function! s:GetDict(lang)
     if ! exists('s:dict_' . a:lang)
       let dictdir = g:codic_dictdir
       let Mapfn = function('s:Map_' . a:lang)
@@ -141,11 +141,11 @@ function! s:GetDict2(lang)
     return s:dict_{a:lang}
 endfunction
 
-function! s:GetDict(word)
+function! s:GetDictAuto(word)
   if a:word =~? '^[a-z_]\+$'
-    return s:GetDict2('english')
+    return s:GetDict('english')
   else
-    return s:GetDict2('naming')
+    return s:GetDict('naming')
   endif
 endfunction
 
