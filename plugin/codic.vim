@@ -8,4 +8,4 @@ if !exists('g:codic_dictdir')
   let g:codic_dictdir = globpath(expand('<sfile>:p:h:h'), 'dict')
 endif
 
-command! -nargs=? Codic call codic#command(<f-args>)
+command! -complete=customlist,codic#complete -nargs=? Codic call codic#command(<f-args>)

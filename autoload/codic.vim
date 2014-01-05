@@ -24,6 +24,14 @@ function! codic#clear()
   endif
 endfunction
 
+function! codic#complete(arglead, cmdline, curpos)
+  let r = codic#search(a:arglead, 50)
+  if type(r) == 0
+    return []
+  endif
+  return map(r, 'v:val["label"]')
+endfunction
+
 " search from codic.
 "   word  - keyword to search
 "   limit - limit number of candidates (0:unlimitted)
