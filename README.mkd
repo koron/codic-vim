@@ -34,7 +34,7 @@ http://codic.jp/assets/archives/
 
 then extract \*.csv files and overwrite in dict/ folder.
 
-Currently, dict/ folder includes dictionaries 20131229 version.
+Currently, dict/ folder includes dictionaries 20140413 version.
 
 ## Special Thanks
 
