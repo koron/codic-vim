@@ -226,7 +226,7 @@ function! s:OpenScratch(name)
   silent! execute 'pedit ' . escape(a:name, ' \')
   if bnum < 0
     silent! wincmd P
-    setlocal buftype=nofile noswapfile
+    setlocal buftype=nofile noswapfile modifiable
     silent! wincmd p
   end
   return bufnr(a:name)
