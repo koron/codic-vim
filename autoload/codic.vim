@@ -95,12 +95,12 @@ endfunction
 function! s:LoadCSV(fname)
   let csv = []
   let line = ''
-  for curr in readfile(a:fname, 'b')
+  for curr in readfile(a:fname, 'r')
     if &enc !=# 'utf-8'
       let curr = iconv(curr, 'utf-8', &enc)
     endif
     let line .= curr
-    if curr =~# '\r$'
+    if curr !~# '"$'
       continue
     endif
     let vals = map(split(line, '"\zs,\ze"'), 'v:val[1:-2]')
