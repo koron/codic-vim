@@ -176,9 +176,10 @@ function! s:GetDictAuto(word)
 endfunction
 
 function! s:Find(dict, word, limit)
+  let lower_word = tolower(a:word)
   let items = []
   for [ k, v ] in items(a:dict)
-    let score = stridx(k, a:word)
+    let score = stridx(k, lower_word)
     if score >= 0
       call add(items, { 'score': score, 'key': k, 'item': v })
     end
