@@ -26,6 +26,14 @@ If you want to use codic-vim as Unite source, please refer
 
 ## Dictionaries
 
+### Web Access
+
+If you set API token to `g:codic_token`, use codic web service access.
+
+need `curl` command.
+
+### Local Dictionaries
+
 For latest dictionaries, download archive files from
 http://codic.jp/assets/archives/
 

@@ -7,6 +7,9 @@ scriptencoding utf-8
 let s:saved_cpo = &cpo
 set cpo-=C
 
+let s:HTTP = vital#codic#import('Web.HTTP')
+let s:JSON = vital#codic#import('Web.JSON')
+
 function! codic#command(...)
   if a:0 == 0
     call s:Search(expand('<cword>'))
@@ -39,14 +42,11 @@ function! codic#search(word, limit)
   if len(a:word) == 0
     return -1
   endif
-  let dict = s:GetDictAuto(a:word)
-  if len(dict) == 0
-    return -2
-  end
-  let items = s:Find(dict, a:word, a:limit)
-  if len(items) == 0
-    return -3
-  end
+  if exists('g:codic_token')
+    let items = s:GetDictWebAuto(a:word, a:limit)
+  else
+    let items = s:GetDictAuto(a:word, a:limit)
+  endif
   return items
 endfunction
 
@@ -167,12 +167,120 @@ function! s:GetDict(lang)
     return s:dict_{a:lang}
 endfunction
 
-function! s:GetDictAuto(word)
+function! s:GetDictAuto(word,limit)
   if a:word =~? '^[a-z_]\+$'
-    return s:GetDict('english')
+    let dict s:GetDict('english')
   else
-    return s:GetDict('naming')
+    let dict s:GetDict('naming')
   endif
+  if len(dict) == 0
+    return -2
+  end
+  let items = s:Find(dict, a:word, a:limit)
+  if len(items) == 0
+    return -3
+  end
+  return items
+endfunction
+
+function! s:GetDictWebAuto(word,limit)
+  if a:word =~? '^[a-z_]\+$'
+    let dict = s:GetDictWebCEDLookup(a:word, a:limit)
+    if len(dict) == 0
+      return -2
+    end
+    let items = []
+    let entry = { 'label': a:word, 'values': []}
+    for item in dict
+      let value = {
+            \ 'word' : item.title,
+            \ 'desc' : item.digest,
+            \}
+      call add(entry.values, value)
+    endfor
+    call add(items, entry)
+    if len(items) == 0
+      return -3
+    endif
+    return items
+  else
+    let dict = s:GetDictWebEngine(a:word, a:limit)
+    if len(dict) == 0
+      return -2
+    end
+    let items = []
+    for item in dict
+      for word in item.words
+        if word.successful
+          let entry = { 'label': word.text, 'values': []}
+          for candidate in word.candidates
+            let value = {
+                  \ 'word' : candidate.text,
+                  \ 'desc' : word.text . ' translate to ' . word.translated_text,
+                  \}
+            call add(entry.values, value)
+          endfor
+          call add(items, entry)
+        endif
+      endfor
+    endfor
+    if len(items) == 0
+      return -3
+    endif
+    if a:limit != 0
+      let items = items[0:(a:limit - 1)]
+    endif
+    return items
+  endif
+endfunction
+
+" [
+"   {'digest': 'ベクトル、一次元配列、ベクター形式の', 'id': 43970, 'title': 'vector'},
+"   {'digest': 'ベークター化', 'id': 50405, 'title': 'vectorization'},
+"   {'digest': 'ベクター化する', 'id': 50404, 'title': 'vectorize'}
+" ]
+function! s:GetDictWebCEDLookup(word, limit)
+  let url = 'https://api.codic.jp/v1/ced/lookup.json'
+  let limit = (a:limit == 0) ? 9999 : a:limit
+  let param = {
+        \ 'query' : a:word,
+        \ 'count' : limit,
+        \}
+  let res = s:HTTP.request('GET', url, {
+        \ 'param'      : param,
+        \ 'token'      : g:codic_token,
+        \ 'authMethod' : 'oauth2',
+        \})
+  let dict = []
+  if res.success
+    let dict = s:JSON.decode(res.content)
+  endif
+  return dict
+endfunction
+
+" [
+"   {
+"     'successful': 1,
+"     'text': 'ベクタ',
+"     'translated_text': 'vector',
+"     'words': [{'candidates': [{'text': 'vector'}], 'successful': 1, 'text': 'ベクタ', 'translated_text': 'vector'}]
+"   }
+" ]
+function! s:GetDictWebEngine(word, limit)
+  let url = 'https://api.codic.jp/v1/engine/translate.json'
+  let param = {
+        \ 'text' : a:word,
+        \}
+  let res = s:HTTP.request('GET', url, {
+        \ 'param'      : param,
+        \ 'token'      : g:codic_token,
+        \ 'authMethod' : 'oauth2',
+        \})
+  let dict = []
+  if res.success
+    let dict = s:JSON.decode(res.content)
+  endif
+  return dict
 endfunction
 
 function! s:Find(dict, word, limit)
