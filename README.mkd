@@ -30,7 +30,7 @@ If you want to use codic-vim as Unite source, please refer
 
 If you set API token to `g:codic_token`, use codic web service access.
 
-need `curl` command.
+Need `curl`, `wget`, or work `Python`.
 
 ### Local Dictionaries
 
